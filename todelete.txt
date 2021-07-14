@@ -1,7 +1,0 @@
-devel
-
-BoxEndPoint.UpdateRange
-BoxEndPoint.UpdateRangeVectoric
-BoxEndPoint.UpdateRangeVectoricOld
-
-RGBToDouble
