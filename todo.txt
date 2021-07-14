@@ -1,0 +1,21 @@
+
+
+spline adjust
+resize to dimentions
+input keyboard
+correct vectoric HSB
+
+processors:
+if
+color scale
+alpha
+rotate/flip
+
+snap to grid
+scriptOutCol
+box composed of other
+hex in color picker
+sinus [0 - 360] -> [-180 - 180]
+
+final:
+remove my paths
