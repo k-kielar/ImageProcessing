@@ -378,44 +378,48 @@ namespace ImageProcessing
         {
             if (Ready())
             {
-                var proc = pins[0][0].Proc.Inputs[0];
-                PrepareUpdating();
-                using (var pxlr = new PixelerVectoric(bmp))
-                {
-                    if (pxlr.Width < VectorColor.Count * 2)
-                    {
-                        UpdateSimple(pxlr, proc);
-                    }
-                    else
-                    {
-                        //var timer = new System.Diagnostics.Stopwatch();
-                        //timer.Start();
-
-                        int dq = pxlr.Height / THREADN;
-                        var tasks = new Task[THREADN];
-                        var tlim = THREADN - 1;
-                        for (int l = 0; l < tlim; l++)
-                        {
-                            var q0 = l * dq;
-                            var qlim = q0 + dq;
-                            var th = l + 0;
-                            var t = new Task(() => Updater.UpdateRange(pxlr, proc, q0, qlim, th));
-                            t.Start();
-                            tasks[l] = t;
-                        }
-                        var tt = new Task(() => Updater.UpdateRange(pxlr, proc, tlim * dq, pxlr.Height, tlim));
-                        tt.Start();
-                        tasks[tlim] = tt;
-                        Task.WaitAll(tasks);
-
-                        //timer.Stop();
-                        //MessageBox.Show(timer.Elapsed.ToString());
-                    }
-                }
+                UpdateMain();
             }
             else
             {
                 UpdateBlank();
+            }
+        }
+        void UpdateMain()
+        {
+            var proc = pins[0][0].Proc.Inputs[0];
+            PrepareUpdating();
+            using (var pxlr = new PixelerVectoric(bmp))
+            {
+                if (pxlr.Width < VectorColor.Count * 2)
+                {
+                    UpdateSimple(pxlr, proc);
+                }
+                else
+                {
+                    //var timer = new System.Diagnostics.Stopwatch();
+                    //timer.Start();
+
+                    int dq = pxlr.Height / THREADN;
+                    var tasks = new Task[THREADN];
+                    var tlim = THREADN - 1;
+                    for (int l = 0; l < tlim; l++)
+                    {
+                        var q0 = l * dq;
+                        var qlim = q0 + dq;
+                        var th = l + 0;
+                        var t = new Task(() => Updater.UpdateRange(pxlr, proc, q0, qlim, th));
+                        t.Start();
+                        tasks[l] = t;
+                    }
+                    var tt = new Task(() => Updater.UpdateRange(pxlr, proc, tlim * dq, pxlr.Height, tlim));
+                    tt.Start();
+                    tasks[tlim] = tt;
+                    Task.WaitAll(tasks);
+
+                    //timer.Stop();
+                    //MessageBox.Show(timer.Elapsed.ToString());
+                }
             }
         }
         void UpdateSequential()
@@ -757,17 +761,17 @@ namespace ImageProcessing
             {
                 switch (Various.FileExtension(path))
                 {
-                    case ".jpg":
+                    case "jpg":
                         var codec = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);
                         var encParams = new EncoderParameters(1);
                         var q = Math.Min(Math.Max((byte)1, Properties.Settings.Default.JPEGSaveQuality), (byte)100);
                         encParams.Param[0] = new EncoderParameter(Encoder.Quality, (long)q);
                         bmp.Save(path, codec, encParams);
                         break;
-                    case ".bmp":
+                    case "bmp":
                         bmp.Save(path, ImageFormat.Bmp);
                         break;
-                    case ".gif":
+                    case "gif":
                         bmp.Save(path, ImageFormat.Gif);
                         break;
                     default:
