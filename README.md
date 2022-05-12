@@ -23,9 +23,3 @@ It is written in C# using .Net Framework and Windows Forms.
 ![Substituting color original image](presentation/subColSrc.jpg)
 #### Result
 ![Substituting color result image](presentation/subColRes.jpg)
-
-## Coding interesting points
-- To increase performance, optimization using SIMD instructions and multitasking is applied
-- Python script can be written to fulfill unusual requests (it is implemented using [IronPython][1] library)
-
-[1]: https://ironpython.net/
